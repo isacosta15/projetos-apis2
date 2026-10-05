@@ -1,9 +1,16 @@
-import requests
-import pyttsx3
-import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import messagebox
 from textblob import TextBlob
+import pyttsx3
 
-def analisar_sentimento(texto):
+
+def analisar():
+    texto = entrada.get("1.0", tk.END).strip()
+
+    if not texto:
+        messagebox.showwarning("Atenção", "Digite um texto.")
+        return
+
     analise = TextBlob(texto)
     polaridade = analise.sentiment.polarity
 
@@ -14,10 +21,15 @@ def analisar_sentimento(texto):
     else:
         sentimento = "Neutro"
 
-    return polaridade, sentimento
+    resultado.config(
+        text=f"Sentimento: {sentimento}\n"
+             f"Polaridade: {polaridade:.2f}"
+    )
+
+    gerar_audio(texto, sentimento)
 
 
-def transformar_em_audio(texto, sentimento):
+def gerar_audio(texto, sentimento):
     engine = pyttsx3.init()
 
     if sentimento == "Positivo":
@@ -27,46 +39,61 @@ def transformar_em_audio(texto, sentimento):
     else:
         engine.setProperty("rate", 150)
 
-    nome_arquivo = f"audio_{sentimento.lower()}.mp3"
+    arquivo = f"audio_{sentimento.lower()}.mp3"
 
-    engine.save_to_file(texto, nome_arquivo)
+    engine.save_to_file(texto, arquivo)
     engine.runAndWait()
 
-    print(f"Áudio salvo: {nome_arquivo}")
+    messagebox.showinfo(
+        "Áudio",
+        f"Áudio salvo como:\n{arquivo}"
+    )
 
 
-textos = [
-    "Estou muito feliz com o resultado do meu projeto!",
-    "Estou muito triste porque meu projeto não funcionou.",
-    "Hoje foi um dia normal."
-]
+# JANELA
+janela = tk.Tk()
+janela.title("Voz & Emoção")
+janela.geometry("400x650")
+janela.resizable(False, False)
 
-polaridades = []
-sentimentos = []
-
-for texto in textos:
-    polaridade, sentimento = analisar_sentimento(texto)
-
-    polaridades.append(polaridade)
-    sentimentos.append(sentimento)
-
-    print("\nTexto:", texto)
-    print("Sentimento:", sentimento)
-    print("Polaridade:", polaridade)
-
-    transformar_em_audio(texto, sentimento)
-
-
-plt.bar(range(len(textos)), polaridades)
-
-plt.axhline(0, linewidth=0.8)
-
-plt.xticks(
-    range(len(textos)),
-    [f"Texto {i + 1}" for i in range(len(textos))]
+titulo = tk.Label(
+    janela,
+    text="Conversor de Texto em Voz",
+    font=("Arial", 18, "bold")
 )
 
-plt.ylabel("Polaridade")
-plt.title("Análise de Sentimentos")
+titulo.pack(pady=25)
 
-plt.show()
+tk.Label(
+    janela,
+    text="Digite seu texto:",
+    font=("Arial", 12)
+).pack()
+
+entrada = tk.Text(
+    janela,
+    height=8,
+    width=40
+)
+
+entrada.pack(pady=15)
+
+botao = tk.Button(
+    janela,
+    text="ANALISAR",
+    command=analisar,
+    width=20,
+    height=2
+)
+
+botao.pack(pady=10)
+
+resultado = tk.Label(
+    janela,
+    text="Sentimento: -",
+    font=("Arial", 13)
+)
+
+resultado.pack(pady=30)
+
+janela.mainloop()
