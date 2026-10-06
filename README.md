@@ -160,5 +160,4 @@ Este conjunto de projetos foi desenvolvido para praticar:
 ## 👩‍💻 Desenvolvido por
 
 **Isabela Nunes**
-
-Estudante de Análise e Desenvolvimento de Sistemas, com interesse em **Tecnologia, Dados e Desenvolvimento de Software**.
+**Juliana Marques**
