@@ -159,5 +159,5 @@ Este conjunto de projetos foi desenvolvido para praticar:
 
 ## 👩‍💻 Desenvolvido por
 
-**Isabela Nunes**
+**Isabela Costa,**
 **Juliana Marques**
